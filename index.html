@@ -1713,8 +1713,9 @@ p {
     <h3 style="margin-top: 60px; padding-bottom: 12px; border-bottom: 2px solid var(--ink);">▎ 細節 2 — 觸發回報延遲時間（秒）</h3>
 
     <p style="margin-top: 20px; max-width: 760px;">
-      每個感測器設定頁裡都有一個叫「<strong>觸發回報延遲時間</strong>」（也可能叫「Trigger Delay」「Re-trigger Time」「持續確認時間」）的選項，預設可能是 <strong>3-10 秒</strong>。
-      很多人不懂這在幹嘛 —— 但設錯會直接讓系統<strong style="color: var(--warn);">每天誤報幾十次</strong>。
+      每個感測器設定頁裡都有一個叫「<strong>觸發回報延遲時間</strong>」（也可能叫「Trigger Delay」「Re-trigger Time」「持續確認時間」）的選項，<strong>原廠預設值是 0.3 秒</strong>。
+      但這個預設值<strong style="color: var(--warn);">太靈敏，會狂誤報</strong>；
+      然而設超過 3 秒以上又會<strong style="color: var(--accent);">漏掉真實事件</strong>。多數案場的合理範圍是 <strong>0.7-2 秒</strong>。
     </p>
 
     <div style="background: var(--paper); border: 1px solid var(--line); padding: 36px 40px; margin: 28px 0;">
@@ -1726,73 +1727,81 @@ p {
         <line x1="60" y1="200" x2="760" y2="200" stroke="#8a8276" stroke-width="1"/>
         <line x1="60" y1="320" x2="760" y2="320" stroke="#8a8276" stroke-width="1"/>
 
-        <!-- 標尺刻度 -->
+        <!-- 合理範圍綠色色帶（0.7s~2s, x=158 到 x=340）-->
+        <rect x="158" y="76" width="182" height="8" fill="rgba(21, 128, 61, 0.25)" rx="2"/>
+        <rect x="158" y="196" width="182" height="8" fill="rgba(21, 128, 61, 0.25)" rx="2"/>
+        <rect x="158" y="316" width="182" height="8" fill="rgba(21, 128, 61, 0.25)" rx="2"/>
+        <text x="249" y="68" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#15803d" font-weight="700" letter-spacing="1">SAFE ZONE 0.7~2s</text>
+
+        <!-- 標尺刻度（0~5秒，每秒 140px）-->
         <g font-family="JetBrains Mono" font-size="9" fill="#8a8276">
           <line x1="60" y1="76" x2="60" y2="84" stroke="#8a8276"/>
           <text x="60" y="100" text-anchor="middle">0s</text>
+          <line x1="130" y1="76" x2="130" y2="84" stroke="#8a8276"/>
+          <text x="130" y="100" text-anchor="middle">0.5s</text>
           <line x1="200" y1="76" x2="200" y2="84" stroke="#8a8276"/>
-          <text x="200" y="100" text-anchor="middle">5s</text>
+          <text x="200" y="100" text-anchor="middle">1s</text>
           <line x1="340" y1="76" x2="340" y2="84" stroke="#8a8276"/>
-          <text x="340" y="100" text-anchor="middle">10s</text>
+          <text x="340" y="100" text-anchor="middle">2s</text>
           <line x1="480" y1="76" x2="480" y2="84" stroke="#8a8276"/>
-          <text x="480" y="100" text-anchor="middle">30s</text>
+          <text x="480" y="100" text-anchor="middle">3s</text>
           <line x1="620" y1="76" x2="620" y2="84" stroke="#8a8276"/>
-          <text x="620" y="100" text-anchor="middle">60s</text>
+          <text x="620" y="100" text-anchor="middle">4s</text>
           <line x1="760" y1="76" x2="760" y2="84" stroke="#8a8276"/>
-          <text x="760" y="100" text-anchor="middle">90s</text>
+          <text x="760" y="100" text-anchor="middle">5s</text>
         </g>
 
-        <!-- 案例 A：延遲設 3 秒（太短，誤報）-->
-        <text x="20" y="50" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#b91c1c">❌ 延遲 3 秒</text>
-        <text x="20" y="65" font-family="JetBrains Mono" font-size="9" fill="#b91c1c">蚊子飛過也誤報</text>
+        <!-- ============ 案例 A：延遲 0.3 秒（原廠預設，太敏感）============ -->
+        <text x="20" y="50" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#b91c1c">❌ 延遲 0.3s</text>
+        <text x="20" y="65" font-family="JetBrains Mono" font-size="9" fill="#b91c1c">原廠預設 / 太敏感</text>
 
         <!-- 蚊子事件 -->
-        <g transform="translate(120, 55)">
-          <circle cx="0" cy="20" r="7" fill="#b91c1c"/>
+        <g transform="translate(95, 55)">
+          <circle cx="0" cy="20" r="6" fill="#b91c1c"/>
           <text x="0" y="42" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">蚊子飛過</text>
-          <text x="0" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#8a8276">0.5s</text>
+          <text x="0" y="56" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#8a8276">短暫</text>
         </g>
-        <line x1="120" y1="62" x2="120" y2="80" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="2 2"/>
+        <line x1="95" y1="62" x2="95" y2="80" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="2 2"/>
 
-        <!-- 觸發 -->
-        <g transform="translate(180, 55)">
+        <!-- 觸發（0.3s 後立刻觸發，x=102） -->
+        <g transform="translate(160, 55)">
           <rect x="-30" y="10" width="60" height="20" rx="2" fill="#b91c1c"/>
           <text x="0" y="24" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#fefcf7" font-weight="700">誤報！</text>
         </g>
-        <line x1="180" y1="80" x2="180" y2="62" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="2 2"/>
+        <line x1="160" y1="80" x2="160" y2="62" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="2 2"/>
 
-        <!-- 案例 B：延遲設 30 秒（剛好濾掉小動物）-->
-        <text x="20" y="170" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#15803d">✓ 延遲 30 秒</text>
-        <text x="20" y="185" font-family="JetBrains Mono" font-size="9" fill="#15803d">過濾雜訊</text>
+        <!-- ============ 案例 B：延遲 1 秒（合理範圍） ============ -->
+        <text x="20" y="170" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#15803d">✓ 延遲 1s</text>
+        <text x="20" y="185" font-family="JetBrains Mono" font-size="9" fill="#15803d">合理範圍</text>
 
-        <!-- 蚊子飛過（5秒就消失，所以 30 秒延遲不會觸發）-->
-        <rect x="120" y="195" width="50" height="10" fill="rgba(185, 28, 28, 0.4)" rx="2"/>
-        <text x="145" y="218" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">蚊子（5s）</text>
-        <text x="145" y="232" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#15803d">→ 30s 內消失，不報</text>
+        <!-- 蚊子飛過短暫，不到 1s 不觸發 -->
+        <rect x="95" y="195" width="30" height="10" fill="rgba(185, 28, 28, 0.4)" rx="2"/>
+        <text x="110" y="218" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">蚊子（短）</text>
+        <text x="110" y="232" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#15803d">→ 不到 1s，不報</text>
 
-        <!-- 真人經過（持續 60 秒）-->
-        <rect x="340" y="195" width="200" height="10" fill="#15803d" rx="2"/>
-        <text x="440" y="218" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">真人在場（60s+）</text>
-        <text x="440" y="232" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#15803d">→ 超過 30s，正確觸發</text>
+        <!-- 真人經過（持續 3 秒，從 x=280 開始）-->
+        <rect x="280" y="195" width="240" height="10" fill="#15803d" rx="2"/>
+        <text x="400" y="218" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">真人在場（3s+）</text>
+        <text x="400" y="232" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#15803d">→ 超過 1s，正確觸發</text>
 
-        <!-- 觸發點 -->
-        <line x1="480" y1="200" x2="480" y2="180" stroke="#15803d" stroke-width="1.5"/>
-        <rect x="450" y="160" width="60" height="20" rx="2" fill="#15803d"/>
-        <text x="480" y="174" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#fefcf7" font-weight="700">正確觸發</text>
+        <!-- 觸發點：真人開始 280 + 1秒(140px) = 420 -->
+        <line x1="420" y1="200" x2="420" y2="180" stroke="#15803d" stroke-width="1.5"/>
+        <rect x="390" y="160" width="60" height="20" rx="2" fill="#15803d"/>
+        <text x="420" y="174" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#fefcf7" font-weight="700">正確觸發</text>
 
-        <!-- 案例 C：延遲設 120 秒（太長，漏掉真實事件）-->
-        <text x="20" y="290" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#c2410c">⚠ 延遲 120 秒</text>
-        <text x="20" y="305" font-family="JetBrains Mono" font-size="9" fill="#c2410c">反應太慢</text>
+        <!-- ============ 案例 C：延遲 3 秒+（太長，漏掉快速通過）============ -->
+        <text x="20" y="290" font-family="Noto Serif TC" font-size="13" font-weight="700" fill="#c2410c">⚠ 延遲 3s+</text>
+        <text x="20" y="305" font-family="JetBrains Mono" font-size="9" fill="#c2410c">反應太慢，漏報</text>
 
-        <!-- 真實事件 -->
-        <rect x="120" y="315" width="180" height="10" fill="#c2410c" rx="2"/>
-        <text x="210" y="338" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">長輩跌倒呼救（持續 50s）</text>
+        <!-- 長輩快速通過 1.5 秒：從 x=95 開始，寬 1.5s = 210px -->
+        <rect x="95" y="315" width="210" height="10" fill="#c2410c" rx="2"/>
+        <text x="200" y="338" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#1a1815">長輩快速通過走道（1.5s）</text>
 
         <!-- 漏報標示 -->
-        <g transform="translate(450, 305)">
-          <rect x="0" y="0" width="200" height="30" rx="2" fill="rgba(194, 65, 12, 0.15)" stroke="#c2410c" stroke-width="1"/>
-          <text x="100" y="13" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#c2410c" font-weight="700">→ 還沒到 120s，事件就結束</text>
-          <text x="100" y="26" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#c2410c" font-weight="700">完全沒回報，看護不知情</text>
+        <g transform="translate(380, 305)">
+          <rect x="0" y="0" width="240" height="30" rx="2" fill="rgba(194, 65, 12, 0.15)" stroke="#c2410c" stroke-width="1"/>
+          <text x="120" y="13" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#c2410c" font-weight="700">→ 還沒等到 3s，人已經過了</text>
+          <text x="120" y="26" text-anchor="middle" font-family="Noto Sans TC" font-size="10" fill="#c2410c" font-weight="700">完全沒回報，自動化沒啟動</text>
         </g>
 
         <!-- 圖例 -->
@@ -1815,27 +1824,27 @@ p {
       <tbody>
         <tr>
           <td class="feature">大門入侵警報</td>
-          <td class="win">3-5 秒</td>
-          <td>真有人闖入，越快通報越好；門口少有小動物干擾</td>
+          <td class="win">0.5-1 秒</td>
+          <td>真有人闖入要快通報，但要避開原廠 0.3 秒過敏值</td>
         </tr>
         <tr>
           <td class="feature">客廳人體偵測</td>
-          <td class="win">15-30 秒</td>
-          <td>避免狗、貓、窗簾飄動造成誤報</td>
+          <td class="win">1-2 秒</td>
+          <td>避免狗、貓、窗簾飄動、光影變化造成誤報</td>
         </tr>
         <tr>
           <td class="feature">浴室存在偵測</td>
-          <td class="win">30-60 秒</td>
+          <td class="win">1-2 秒</td>
           <td>避免短暫進出（拿東西）誤判為「久留」起點</td>
         </tr>
         <tr>
           <td class="feature">廚房進入提醒</td>
-          <td class="win">5-10 秒</td>
-          <td>需要相對及時，但要過濾走道經過、不進去廚房的狀況</td>
+          <td class="win">0.7-1.5 秒</td>
+          <td>需要相對及時，但要過濾路過走道、沒進廚房的狀況</td>
         </tr>
         <tr>
           <td class="feature">陽台 / 倉庫</td>
-          <td class="win">60+ 秒</td>
+          <td class="win">1.5-3 秒</td>
           <td>常有飛蟲、陽光變化，要抓真實滯留事件</td>
         </tr>
       </tbody>
@@ -1843,10 +1852,10 @@ p {
 
     <div class="callout warn" style="margin-top: 32px;">
       <div class="callout-tag">⚠ 雷區提醒</div>
-      <div class="callout-title">設定太短 = 客戶覺得系統「失靈」</div>
-      <p>誤報是系統信任感的<strong>頭號殺手</strong>。客戶第一次裝完，如果連續一個禮拜每天接到 5-10 次莫名其妙的警報（其實是貓、是蚊子、是窗簾），<strong>他會把整套系統關掉，然後再也不開</strong>。從此你做的所有工都浪費了。</p>
-      <p>反過來，設太長雖然會漏報，但漏報是「無感」的 —— 客戶不會主動發現。所以多數人會選擇調太短，結果反而毀了整套系統的信譽。</p>
-      <p style="margin-top: 12px;"><strong>正確心態：寧可漏報幾次少數情境，也不要每天誤報煩死客戶。</strong>第一次安裝建議都從<strong>偏長的延遲</strong>開始，根據客戶實際反饋再慢慢調短。</p>
+      <div class="callout-title">原廠預設不能用，但也不能矯枉過正</div>
+      <p><strong>原廠預設 0.3 秒太敏感</strong> —— 第一個禮拜客戶會被誤報煩到把整套系統關掉（蚊子、貓、窗簾飄動、光影變化都觸發）。<strong>誤報是系統信任感的頭號殺手</strong>，從此你做的所有工都浪費了。</p>
+      <p><strong>但反過來設到 3 秒以上也不行</strong> —— 長輩走得快，1-2 秒就通過感測器，那條規則永遠不會啟動。客戶會說「我裝了感測器但根本沒反應」 —— 這種「漏報」雖然安靜，但也是失敗。</p>
+      <p style="margin-top: 12px;"><strong>正確做法：第一次安裝先把每個感測器從 0.3 秒改成 1 秒當基準，</strong>再依場景微調到 0.5-2 秒之間。寧可一週後客戶反映「太靈敏」再縮短，也不要從 0.3 秒開始狂誤報。</p>
     </div>
 
     <div class="callout" style="margin-top: 24px;">
